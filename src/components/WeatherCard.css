@@ -1,0 +1,42 @@
+.weather-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 100%;
+  max-width: 200px;
+  border: 1px solid #e0e0e0; /* Тонкая граница для разделения */
+}
+
+.weather-card h2 {
+  margin: 0 0 12px;
+  font-size: 1.1em;
+  color: #333;
+}
+
+.temperature {
+  font-size: 1.5em;
+  color: #007bff;
+  margin: 10px 0;
+}
+
+.description {
+  margin: 0;
+  color: #666;
+}
+
+.remove-btn {
+  background-color: #d9534f;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 15px;
+  font-size: 0.9em;
+}
+
+.remove-btn:hover {
+  background-color: #c9302c;
+}
