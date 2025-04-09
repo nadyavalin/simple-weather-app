@@ -9,11 +9,13 @@ const app = document.querySelector<HTMLDivElement>("#app");
 async function displayDefaultLocations() {
   const defaultLocations = [
     { name: "Санкт-Петербург, проспект Ветеранов", lat: 59.8411, lon: 30.2514 },
-    { name: "Санкт-Петербург, Пупышево", lat: 59.6833, lon: 29.8333 },
     { name: "Санкт-Петербург, площадь Мужества", lat: 59.9983, lon: 30.3639 },
+    { name: "Санкт-Петербург, Пупышево", lat: 59.6833, lon: 29.8333 },
     { name: "Санкт-Петербург, Стрельна", lat: 59.8519, lon: 30.0358 },
+    { name: "Москва", lat: 55.7512, lon: 37.6184 },
     { name: "Волгоград", lat: 48.708, lon: 44.5133 },
-    { name: "Курск", lat: 51.73733, lon: 36.18735 }
+    { name: "Курск", lat: 51.73733, lon: 36.18735 },
+    { name: "Переславль-Залесский", lat: 56.7361, lon: 38.8492 },
   ];
 
   const weatherOutput = document.getElementById("weatherOutput");
@@ -28,6 +30,11 @@ async function displayDefaultLocations() {
       const card = createWeatherCard({
         city: location.name,
         temp: data.main.temp,
+        feels_like: data.main.feels_like,
+        humidity: data.main.humidity,
+        pressure: data.main.pressure,
+        wind_speed: data.wind.speed,
+        wind_deg: data.wind.deg,
         description: data.weather[0].description,
         icon: data.weather[0].icon,
       });
@@ -80,6 +87,11 @@ async function addNewCityWeather() {
     const card = createWeatherCard({
       city: data.name,
       temp: data.main.temp,
+      feels_like: data.main.humidity,
+      humidity: data.main.humidity,
+      pressure: data.main.pressure,
+      wind_speed: data.wind.speed,
+      wind_deg: data.wind.deg,
       description: data.weather[0].description,
       icon: data.weather[0].icon,
     });

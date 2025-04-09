@@ -52,6 +52,7 @@ button:hover {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 20px;
 }
 
@@ -59,4 +60,11 @@ button:hover {
   color: #d9534f;
   font-size: 1.1em;
   margin: 10px 0;
+}
+
+@media (max-width: 380px) {
+  .input-container {
+    gap: 10px;
+    flex-direction: column;
+  }
 }
