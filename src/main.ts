@@ -43,6 +43,7 @@ async function displayDefaultCities() {
         city: data.name,
         temp: data.main.temp,
         description: data.weather[0].description,
+        icon: data.weather[0].icon,
       });
       weatherOutput.appendChild(card);
     } catch (error) {
@@ -66,6 +67,7 @@ async function addNewCityWeather() {
       city: data.name,
       temp: data.main.temp,
       description: data.weather[0].description,
+      icon: data.weather[0].icon,
     });
     weatherOutput.appendChild(card);
     cityInput.value = "";

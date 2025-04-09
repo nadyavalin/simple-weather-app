@@ -6,13 +6,20 @@
   text-align: center;
   width: 100%;
   max-width: 200px;
-  border: 1px solid #e0e0e0; /* Тонкая граница для разделения */
+  border: 1px solid #e0e0e0;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
 .weather-card h2 {
   margin: 0 0 12px;
   font-size: 1.1em;
   color: #333;
+}
+
+.weather-icon {
+  width: 80px;
+  height: 80px;
+  margin: 10px 0;
 }
 
 .temperature {
@@ -39,4 +46,15 @@
 
 .remove-btn:hover {
   background-color: #c9302c;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

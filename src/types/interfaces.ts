@@ -13,3 +13,10 @@ export interface WeatherData {
   weather: Weather[];
   name: string;
 }
+
+export interface WeatherCardProps {
+  city: string;
+  temp: number;
+  description: string;
+  icon: string;
+}

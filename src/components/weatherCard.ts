@@ -1,15 +1,21 @@
-interface WeatherCardProps {
-  city: string;
-  temp: number;
-  description: string;
-}
+import { WeatherCardProps } from "../types/interfaces";
 
-export function createWeatherCard({ city, temp, description }: WeatherCardProps): HTMLElement {
+export function createWeatherCard({
+  city,
+  temp,
+  description,
+  icon,
+}: WeatherCardProps): HTMLElement {
   const card = document.createElement("div");
   card.className = "weather-card";
 
   const cityName = document.createElement("h2");
   cityName.textContent = city;
+
+  const iconImg = document.createElement("img");
+  iconImg.src = `http://openweathermap.org/img/wn/${icon}@2x.png`;
+  iconImg.alt = description;
+  iconImg.className = "weather-icon";
 
   const temperature = document.createElement("p");
   temperature.className = "temperature";
@@ -24,6 +30,6 @@ export function createWeatherCard({ city, temp, description }: WeatherCardProps)
   removeButton.className = "remove-btn";
   removeButton.addEventListener("click", () => card.remove());
 
-  card.append(cityName, temperature, weatherDesc, removeButton);
+  card.append(cityName, iconImg, temperature, weatherDesc, removeButton);
   return card;
 }
