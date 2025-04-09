@@ -13,6 +13,7 @@ async function displayDefaultLocations() {
     { name: "Санкт-Петербург, площадь Мужества", lat: 59.9983, lon: 30.3639 },
     { name: "Санкт-Петербург, Стрельна", lat: 59.8519, lon: 30.0358 },
     { name: "Волгоград", lat: 48.708, lon: 44.5133 },
+    { name: "Курск", lat: 51.73733, lon: 36.18735 }
   ];
 
   const weatherOutput = document.getElementById("weatherOutput");
