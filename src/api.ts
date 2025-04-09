@@ -1,3 +1,4 @@
+import { WeatherData } from "./types/interfaces";
 
 const apiKey = import.meta.env.VITE_API_KEY;
 const lang = "ru";

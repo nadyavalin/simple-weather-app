@@ -23,7 +23,8 @@
   margin: 10px 0;
 }
 
-.temperature, .humidity {
+.temperature,
+.humidity {
   font-size: 1.5em;
   color: #007bff;
   margin: 10px 0;
