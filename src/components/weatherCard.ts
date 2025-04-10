@@ -37,12 +37,16 @@ export function createWeatherCard({
   const card = document.createElement("div");
   card.className = "weather-card";
 
+  const cardHeader = document.createElement("div");
+  cardHeader.className = "weather-card__header";
+  const cardContent = document.createElement("div");
+  cardContent.className = "weather-card__content";
+
   const cityName = document.createElement("h2");
   cityName.textContent = city;
 
   const iconImg = document.createElement("img");
   iconImg.src = iconMap[icon];
-  // iconImg.src = `http://openweathermap.org/img/wn/${icon}@2x.png`;
   iconImg.alt = description;
   iconImg.className = "weather-icon";
 
@@ -80,16 +84,8 @@ export function createWeatherCard({
   removeButton.className = "remove-btn";
   removeButton.addEventListener("click", () => card.remove());
 
-  card.append(
-    cityName,
-    iconImg,
-    temperature,
-    feels,
-    humid,
-    press,
-    windSpeed,
-    weatherDesc,
-    removeButton,
-  );
+  card.append(cardHeader, cardContent);
+  cardHeader.append(cityName, iconImg, weatherDesc);
+  cardContent.append(temperature, feels, humid, press, windSpeed, removeButton);
   return card;
 }
