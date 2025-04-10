@@ -1,3 +1,6 @@
+import { defaultLocations } from "../constants";
+import { CardData } from "../types/interfaces";
+
 export function getWindDirection(deg: number): string {
   const normalizedDeg = ((deg % 360) + 360) % 360;
 
@@ -11,4 +14,13 @@ export function getWindDirection(deg: number): string {
   if (normalizedDeg >= 292.5 && normalizedDeg < 337.5) return "Северо-западный";
 
   return "Неизвестно";
+}
+
+export function loadCardsFromStorage(): CardData[] {
+  const savedCards = localStorage.getItem("weatherCards");
+  return savedCards ? JSON.parse(savedCards) : defaultLocations;
+}
+
+export function saveCardsToStorage(cards: CardData[]) {
+  localStorage.setItem("weatherCards", JSON.stringify(cards));
 }

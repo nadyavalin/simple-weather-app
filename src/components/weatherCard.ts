@@ -33,7 +33,8 @@ export function createWeatherCard({
   wind_deg,
   description,
   icon,
-}: WeatherCardProps): HTMLElement {
+  onRemove,
+}: WeatherCardProps & { onRemove?: () => void }): HTMLElement {
   const card = document.createElement("div");
   card.className = "weather-card";
 
@@ -82,7 +83,10 @@ export function createWeatherCard({
   const removeButton = document.createElement("button");
   removeButton.textContent = "Удалить";
   removeButton.className = "remove-btn";
-  removeButton.addEventListener("click", () => card.remove());
+  removeButton.addEventListener("click", () => {
+    card.remove();
+    if (onRemove) onRemove();
+  });
 
   card.append(cardHeader, cardContent);
   cardHeader.append(cityName, iconImg, weatherDesc);

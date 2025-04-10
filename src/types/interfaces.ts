@@ -32,4 +32,12 @@ export interface WeatherCardProps {
   wind_deg: number;
   description: string;
   icon: string;
+  onRemove?: () => void;
+}
+
+export interface CardData {
+  name: string;
+  lat?: number;
+  lon?: number;
+  city?: string; // Для пользовательских городов без координат
 }

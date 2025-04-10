@@ -3,32 +3,43 @@ import { getPointWeather, getWeather } from "./api";
 import "./style.css";
 import "./components/WeatherCard.css";
 import { createWeatherCard } from "./components/weatherCard";
+import { CardData } from "./types/interfaces";
+import { loadCardsFromStorage, saveCardsToStorage } from "./utils/utils";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
-async function displayDefaultLocations() {
-  const defaultLocations = [
-    { name: "Санкт-Петербург, проспект Ветеранов", lat: 59.8411, lon: 30.2514 },
-    { name: "Санкт-Петербург, площадь Мужества", lat: 59.9983, lon: 30.3639 },
-    { name: "Санкт-Петербург, Пупышево", lat: 59.6833, lon: 29.8333 },
-    { name: "Санкт-Петербург, Стрельна", lat: 59.8519, lon: 30.0358 },
-    { name: "Москва", lat: 55.7512, lon: 37.6184 },
-    { name: "Волгоград", lat: 48.708, lon: 44.5133 },
-    { name: "Курск", lat: 51.73733, lon: 36.18735 },
-    { name: "Переславль-Залесский", lat: 56.7361, lon: 38.8492 },
-  ];
+function removeCard(cardToRemove: CardData) {
+  const cards = loadCardsFromStorage();
+  const updatedCards = cards.filter(
+    (card) =>
+      card.name !== cardToRemove.name ||
+      card.lat !== cardToRemove.lat ||
+      card.lon !== cardToRemove.lon ||
+      card.city !== cardToRemove.city,
+  );
+  saveCardsToStorage(updatedCards);
+  displayCards(updatedCards);
+}
 
+async function displayCards(cards: CardData[]) {
   const weatherOutput = document.getElementById("weatherOutput");
-  if (!weatherOutput) {
-    console.error("weatherOutput не найден");
-    return;
-  }
+  if (!weatherOutput) return;
 
-  for (const location of defaultLocations) {
+  weatherOutput.innerHTML = "";
+
+  for (const cardData of cards) {
     try {
-      const data = await getPointWeather(location.lat, location.lon);
+      let data;
+      if (cardData.lat !== undefined && cardData.lon !== undefined) {
+        data = await getPointWeather(cardData.lat, cardData.lon);
+      } else if (cardData.city) {
+        data = await getWeather(cardData.city);
+      } else {
+        throw new Error("Неверные данные карточки");
+      }
+
       const card = createWeatherCard({
-        city: location.name,
+        city: cardData.name,
         temp: data.main.temp,
         feels_like: data.main.feels_like,
         humidity: data.main.humidity,
@@ -37,12 +48,12 @@ async function displayDefaultLocations() {
         wind_deg: data.wind.deg,
         description: data.weather[0].description,
         icon: data.weather[0].icon,
+        onRemove: () => removeCard(cardData),
       });
       weatherOutput.appendChild(card);
     } catch (error) {
-      console.error(`Ошибка для ${location.name}: ${(error as Error).message}`);
       const errorMessage = document.createElement("p");
-      errorMessage.textContent = `Ошибка для ${location.name}: ${(error as Error).message}`;
+      errorMessage.textContent = `Ошибка для ${cardData.name}: ${(error as Error).message}`;
       errorMessage.className = "error";
       weatherOutput.appendChild(errorMessage);
     }
@@ -74,9 +85,8 @@ if (app) {
 
   app.append(inputContainer, weatherOutput);
 
-  displayDefaultLocations();
-} else {
-  console.error("Элемент #app не найден");
+  const savedCards = loadCardsFromStorage();
+  displayCards(savedCards);
 }
 
 async function addNewCityWeather() {
@@ -90,18 +100,11 @@ async function addNewCityWeather() {
 
   try {
     const data = await getWeather(city);
-    const card = createWeatherCard({
-      city: data.name,
-      temp: data.main.temp,
-      feels_like: data.main.feels_like,
-      humidity: data.main.humidity,
-      pressure: data.main.pressure,
-      wind_speed: data.wind.speed,
-      wind_deg: data.wind.deg,
-      description: data.weather[0].description,
-      icon: data.weather[0].icon,
-    });
-    weatherOutput.appendChild(card);
+    const newCard: CardData = { name: data.name, city };
+    const cards = loadCardsFromStorage();
+    cards.push(newCard);
+    saveCardsToStorage(cards);
+    displayCards(cards);
     cityInput.value = "";
   } catch (error) {
     const errorMessage = document.createElement("p");
