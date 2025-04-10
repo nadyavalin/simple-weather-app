@@ -5,6 +5,7 @@ import "./components/WeatherCard.css";
 import { createWeatherCard } from "./components/weatherCard";
 import { CardData } from "./types/interfaces";
 import { loadCardsFromStorage, saveCardsToStorage } from "./utils/utils";
+import { defaultLocations } from "./constants";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
@@ -78,11 +79,19 @@ if (app) {
     }
   });
 
-  const button = document.createElement("button");
-  button.textContent = "Добавить город";
-  button.addEventListener("click", addNewCityWeather);
+  const addButton = document.createElement("button");
+  addButton.textContent = "Добавить город";
+  addButton.addEventListener("click", addNewCityWeather);
 
-  inputContainer.append(input, button);
+  const resetButton = document.createElement("button");
+  resetButton.textContent = "Восстановить дефолт";
+  resetButton.className = "reset-btn";
+  resetButton.addEventListener("click", () => {
+    saveCardsToStorage(defaultLocations);
+    displayCards(defaultLocations);
+  });
+
+  inputContainer.append(input, addButton, resetButton);
 
   const weatherOutput = document.createElement("div");
   weatherOutput.id = "weatherOutput";
@@ -103,8 +112,12 @@ async function addNewCityWeather() {
   if (!city) return;
 
   try {
-    const data = await getWeather(city);
-    const newCard: CardData = { name: data.name, city };
+    const currentData = await getWeather(city);
+    const newCard: CardData = {
+      name: currentData.name,
+      lat: currentData.coord.lat,
+      lon: currentData.coord.lon,
+    };
     const cards = loadCardsFromStorage();
     cards.push(newCard);
     saveCardsToStorage(cards);

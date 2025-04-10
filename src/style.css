@@ -17,6 +17,8 @@
   --button-hover-color: #0056b3;
   --card-title: #333333;
   --card-description-color: #666666;
+  --button-reset-color: #28a745;
+  --button-reset-hover-color: #218838;
   --button-delete-color: #d9534f;
   --button-delete-hover-color: #c30d06;
   --attention-color: #d9534f;
@@ -74,12 +76,16 @@ button {
   border: none;
   border-radius: 6px;
 
-  font-size: 1em;
+  font-size: 0.9em;
   color: var(--button-text-color);
 
   background-color: var(--button-color);
 
   transition: background-color 0.3s ease-in;
+}
+
+.reset-btn {
+  background-color: var(--button-reset-color);
 }
 
 #weatherOutput {
@@ -99,6 +105,10 @@ button {
 @media (hover: hover) {
   button:hover {
     background-color: var(--button-hover-color);
+  }
+
+  .reset-btn:hover {
+    background-color: var(--button-reset-hover-color);
   }
 }
 
