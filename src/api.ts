@@ -21,12 +21,13 @@ export async function getPointWeather(lat: number, lon: number): Promise<Weather
   return response.json();
 }
 
+// TODO убрать any
 export async function getWeatherForecast(lat: number, lon: number): Promise<WeatherForecastData> {
   if (!apiKey) throw new Error("API key is missing");
   const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&lang=${lang}&appid=${apiKey}&units=metric`;
 
   const response = await fetch(url);
-  if (!response.ok) throw new Error("Прогноз не доступен");
+  if (!response.ok) throw new Error("Прогноз недоступен");
   const data = await response.json();
   return {
     hourly: data.list.map((item: any) => ({

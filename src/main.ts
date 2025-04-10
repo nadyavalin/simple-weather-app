@@ -65,6 +65,36 @@ async function displayCards(cards: CardData[]) {
   }
 }
 
+async function addNewCityWeather() {
+  const cityInput = document.getElementById("cityInput") as HTMLInputElement;
+  const weatherOutput = document.getElementById("weatherOutput");
+
+  if (!cityInput || !weatherOutput) return;
+
+  const city = cityInput.value.trim();
+  if (!city) return;
+
+  try {
+    const currentData = await getWeather(city);
+    const newCard: CardData = {
+      name: currentData.name,
+      lat: currentData.coord.lat,
+      lon: currentData.coord.lon,
+    };
+    const cards = loadCardsFromStorage();
+    cards.push(newCard);
+    saveCardsToStorage(cards);
+    displayCards(cards);
+    cityInput.value = "";
+  } catch (error) {
+    const errorMessage = document.createElement("p");
+    errorMessage.textContent = `Ошибка: ${(error as Error).message}`;
+    errorMessage.className = "error";
+    weatherOutput.appendChild(errorMessage);
+    setTimeout(() => errorMessage.remove(), 3000);
+  }
+}
+
 if (app) {
   const inputContainer = document.createElement("div");
   inputContainer.className = "input-container";
@@ -100,34 +130,4 @@ if (app) {
 
   const savedCards = loadCardsFromStorage();
   displayCards(savedCards);
-}
-
-async function addNewCityWeather() {
-  const cityInput = document.getElementById("cityInput") as HTMLInputElement;
-  const weatherOutput = document.getElementById("weatherOutput");
-
-  if (!cityInput || !weatherOutput) return;
-
-  const city = cityInput.value.trim();
-  if (!city) return;
-
-  try {
-    const currentData = await getWeather(city);
-    const newCard: CardData = {
-      name: currentData.name,
-      lat: currentData.coord.lat,
-      lon: currentData.coord.lon,
-    };
-    const cards = loadCardsFromStorage();
-    cards.push(newCard);
-    saveCardsToStorage(cards);
-    displayCards(cards);
-    cityInput.value = "";
-  } catch (error) {
-    const errorMessage = document.createElement("p");
-    errorMessage.textContent = `Ошибка: ${(error as Error).message}`;
-    errorMessage.className = "error";
-    weatherOutput.appendChild(errorMessage);
-    setTimeout(() => errorMessage.remove(), 3000);
-  }
 }
