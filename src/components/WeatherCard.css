@@ -6,8 +6,8 @@
   justify-content: space-between;
 
   width: 100%;
-  max-width: 280px;
-  height: 420px;
+  width: 280px;
+  height: 450px;
   padding: 20px;
   border: 1px solid var(--border-color);
   border-radius: 10px;
@@ -49,6 +49,11 @@
   color: var(--card-main-text-color);
 }
 
+.fills-like {
+  font-size: 0.6em;
+  color: var(--text-color);
+}
+
 .wind-direction {
   color: var(--attention-color);
 }
@@ -58,9 +63,15 @@
   color: var(--card-description-color);
 }
 
+.forecast {
+  margin-top: 20px;
+  font-size: 0.7em;
+}
+
 .remove-btn {
   cursor: pointer;
 
+  width: 235px;
   margin-top: 15px;
   padding: 5px 10px;
   border: none;

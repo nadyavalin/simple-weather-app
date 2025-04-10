@@ -1,4 +1,4 @@
-import { getPointWeather, getWeather } from "./api";
+import { getPointWeather, getWeather, getWeatherForecast } from "./api";
 
 import "./style.css";
 import "./components/WeatherCard.css";
@@ -29,25 +29,29 @@ async function displayCards(cards: CardData[]) {
 
   for (const cardData of cards) {
     try {
-      let data;
+      let currentData;
+      let forecastData;
       if (cardData.lat !== undefined && cardData.lon !== undefined) {
-        data = await getPointWeather(cardData.lat, cardData.lon);
+        currentData = await getPointWeather(cardData.lat, cardData.lon);
+        forecastData = await getWeatherForecast(cardData.lat, cardData.lon);
       } else if (cardData.city) {
-        data = await getWeather(cardData.city);
+        currentData = await getWeather(cardData.city);
+        forecastData = await getWeatherForecast(currentData.coord.lat, currentData.coord.lon);
       } else {
         throw new Error("Неверные данные карточки");
       }
 
       const card = createWeatherCard({
         city: cardData.name,
-        temp: data.main.temp,
-        feels_like: data.main.feels_like,
-        humidity: data.main.humidity,
-        pressure: data.main.pressure,
-        wind_speed: data.wind.speed,
-        wind_deg: data.wind.deg,
-        description: data.weather[0].description,
-        icon: data.weather[0].icon,
+        temp: currentData.main.temp,
+        feels_like: currentData.main.feels_like,
+        humidity: currentData.main.humidity,
+        pressure: currentData.main.pressure,
+        wind_speed: currentData.wind.speed,
+        wind_deg: currentData.wind.deg,
+        description: currentData.weather[0].description,
+        icon: currentData.weather[0].icon,
+        forecast: forecastData.hourly,
         onRemove: () => removeCard(cardData),
       });
       weatherOutput.appendChild(card);

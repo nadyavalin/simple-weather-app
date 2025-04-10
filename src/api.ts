@@ -1,4 +1,4 @@
-import { WeatherData } from "./types/interfaces";
+import { WeatherData, WeatherForecastData } from "./types/interfaces";
 
 const apiKey = import.meta.env.VITE_API_KEY;
 const lang = "ru";
@@ -19,4 +19,20 @@ export async function getPointWeather(lat: number, lon: number): Promise<Weather
   const response = await fetch(url);
   if (!response.ok) throw new Error("Место не найдено");
   return response.json();
+}
+
+export async function getWeatherForecast(lat: number, lon: number): Promise<WeatherForecastData> {
+  if (!apiKey) throw new Error("API key is missing");
+  const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&lang=${lang}&appid=${apiKey}&units=metric`;
+
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("Прогноз не доступен");
+  const data = await response.json();
+  return {
+    hourly: data.list.map((item: any) => ({
+      dt: item.dt,
+      temp: item.main.temp,
+      weather: item.weather,
+    })),
+  };
 }

@@ -20,6 +20,17 @@ export interface WeatherData {
   weather: Weather[];
   wind: Wind;
   name: string;
+  coord: { lat: number; lon: number };
+}
+
+export interface HourlyForecast {
+  dt: number;
+  temp: number;
+  weather: Weather[];
+}
+
+export interface WeatherForecastData {
+  hourly: HourlyForecast[];
 }
 
 export interface WeatherCardProps {
@@ -32,6 +43,7 @@ export interface WeatherCardProps {
   wind_deg: number;
   description: string;
   icon: string;
+  forecast?: HourlyForecast[];
   onRemove?: () => void;
 }
 

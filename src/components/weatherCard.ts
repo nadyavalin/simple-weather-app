@@ -3,24 +3,24 @@ import { WeatherCardProps } from "../types/interfaces";
 import { getWindDirection } from "../utils/utils";
 
 const iconMap: { [key: string]: string } = {
-  "01d": "../../public/icons/clear-sky.svg",
-  "01n": "../../public/icons/clear-night.svg",
-  "02d": "../../public/icons/partly-cloudy-day.svg",
-  "02n": "../../public/icons/partly-cloudy-night.svg",
-  "03d": "../../public/icons/cloudy.svg",
-  "03n": "../../public/icons/cloudy.svg",
-  "04d": "../../public/icons/overcast-day.svg",
-  "04n": "../../public/icons/overcast-night.svg",
-  "09d": "../../public/icons/rain.svg",
-  "09n": "../../public/icons/rain.svg",
-  "10d": "../../public/icons/partly-cloudy-day-rain.svg",
-  "10n": "../../public/icons/partly-cloudy-day-rain.svg",
-  "11d": "../../public/icons/thunderstorms-day.svg",
-  "11n": "../../public/icons/thunderstorms-night.svg",
-  "13d": "../../public/icons/snow.svg",
-  "13n": "../../public/icons/snow.svg",
-  "50d": "../../public/icons/mist.svg",
-  "50n": "../../public/icons/mist.svg",
+  "01d": "/icons/clear-sky.svg",
+  "01n": "/icons/clear-night.svg",
+  "02d": "/icons/partly-cloudy-day.svg",
+  "02n": "/icons/partly-cloudy-night.svg",
+  "03n": "/icons/cloudy.svg",
+  "03d": "/icons/cloudy.svg",
+  "04d": "/icons/overcast-day.svg",
+  "04n": "/icons/overcast-night.svg",
+  "09d": "/icons/rain.svg",
+  "09n": "/icons/rain.svg",
+  "10d": "/icons/partly-cloudy-day-rain.svg",
+  "10n": "./icons/partly-cloudy-day-rain.svg",
+  "11d": "/icons/thunderstorms-day.svg",
+  "11n": "/icons/thunderstorms-night.svg",
+  "13d": "/icons/snow.svg",
+  "13n": "/icons/snow.svg",
+  "50d": "/icons/mist.svg",
+  "50n": "/icons/mist.svg",
 };
 
 export function createWeatherCard({
@@ -33,6 +33,7 @@ export function createWeatherCard({
   wind_deg,
   description,
   icon,
+  forecast = [],
   onRemove,
 }: WeatherCardProps & { onRemove?: () => void }): HTMLElement {
   const card = document.createElement("div");
@@ -51,13 +52,18 @@ export function createWeatherCard({
   iconImg.alt = description;
   iconImg.className = "weather-icon";
 
+  const weatherDesc = document.createElement("p");
+  weatherDesc.className = "description";
+  weatherDesc.textContent = description;
+
   const temperature = document.createElement("p");
   temperature.className = "temperature";
-  temperature.textContent = `${temp}°C`;
+  temperature.textContent = `${temp}°C `;
 
-  const feels = document.createElement("p");
+  const feels = document.createElement("span");
   feels.className = "fills-like";
-  feels.textContent = `Ощущается: ${feels_like}°C`;
+  feels.textContent = `(${feels_like}°C)`;
+  temperature.appendChild(feels);
 
   const humid = document.createElement("p");
   humid.className = "humidity";
@@ -76,9 +82,24 @@ export function createWeatherCard({
   span.textContent = getWindDirection(wind_deg);
   windSpeed.appendChild(span);
 
-  const weatherDesc = document.createElement("p");
-  weatherDesc.className = "description";
-  weatherDesc.textContent = description;
+  const forecastContainer = document.createElement("div");
+  forecastContainer.className = "forecast";
+  if (forecast.length > 0) {
+    const forecastTitle = document.createElement("h4");
+    forecastTitle.textContent = "Через 3 часа:";
+    forecastContainer.appendChild(forecastTitle);
+
+    const nextHour = forecast[1];
+    if (nextHour) {
+      const hourElement = document.createElement("p");
+      const time = new Date(nextHour.dt * 1000).toLocaleTimeString("ru", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      hourElement.textContent = `${time}: ${nextHour.temp}°C, ${nextHour.weather[0].description}`;
+      forecastContainer.appendChild(hourElement);
+    }
+  }
 
   const removeButton = document.createElement("button");
   removeButton.textContent = "Удалить";
@@ -90,6 +111,6 @@ export function createWeatherCard({
 
   card.append(cardHeader, cardContent);
   cardHeader.append(cityName, iconImg, weatherDesc);
-  cardContent.append(temperature, feels, humid, press, windSpeed, removeButton);
+  cardContent.append(temperature, humid, press, windSpeed, forecastContainer, removeButton);
   return card;
 }
