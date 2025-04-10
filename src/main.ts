@@ -57,6 +57,12 @@ if (app) {
   input.id = "cityInput";
   input.placeholder = "Введи город";
 
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      addNewCityWeather();
+    }
+  });
+
   const button = document.createElement("button");
   button.textContent = "Добавить город";
   button.addEventListener("click", addNewCityWeather);
