@@ -14,7 +14,7 @@ const iconMap: { [key: string]: string } = {
   "09d": "/icons/rain.svg",
   "09n": "/icons/rain.svg",
   "10d": "/icons/partly-cloudy-day-rain.svg",
-  "10n": "./icons/partly-cloudy-day-rain.svg",
+  "10n": "/icons/partly-cloudy-day-rain.svg",
   "11d": "/icons/thunderstorms-day.svg",
   "11n": "/icons/thunderstorms-night.svg",
   "13d": "/icons/snow.svg",
