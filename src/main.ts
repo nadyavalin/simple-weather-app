@@ -87,7 +87,7 @@ async function addNewCityWeather() {
     const card = createWeatherCard({
       city: data.name,
       temp: data.main.temp,
-      feels_like: data.main.humidity,
+      feels_like: data.main.feels_like,
       humidity: data.main.humidity,
       pressure: data.main.pressure,
       wind_speed: data.wind.speed,
