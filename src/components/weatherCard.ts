@@ -1,27 +1,6 @@
-import { PRESSURE_COEFFICIENT } from "../constants";
+import { iconMap, PRESSURE_COEFFICIENT } from "../constants";
 import { WeatherCardProps } from "../types/interfaces";
 import { getWindDirection } from "../utils/utils";
-
-const iconMap: { [key: string]: string } = {
-  "01d": "/icons/clear-sky.svg",
-  "01n": "/icons/clear-night.svg",
-  "02d": "/icons/partly-cloudy-day.svg",
-  "02n": "/icons/partly-cloudy-night.svg",
-  "03n": "/icons/cloudy.svg",
-  "03d": "/icons/cloudy.svg",
-  "04d": "/icons/overcast-day.svg",
-  "04n": "/icons/overcast-night.svg",
-  "09d": "/icons/rain.svg",
-  "09n": "/icons/rain.svg",
-  "10d": "/icons/partly-cloudy-day-rain.svg",
-  "10n": "/icons/partly-cloudy-day-rain.svg",
-  "11d": "/icons/thunderstorms-day.svg",
-  "11n": "/icons/thunderstorms-night.svg",
-  "13d": "/icons/snow.svg",
-  "13n": "/icons/snow.svg",
-  "50d": "/icons/mist.svg",
-  "50n": "/icons/mist.svg",
-};
 
 export function createWeatherCard({
   city,

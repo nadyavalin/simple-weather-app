@@ -23,14 +23,21 @@ export interface WeatherData {
   coord: { lat: number; lon: number };
 }
 
+export interface ForecastItem {
+  dt: number;
+  main: Main;
+  weather: Weather[];
+  wind: Wind;
+}
+
+export interface WeatherForecastData {
+  list: ForecastItem[];
+}
+
 export interface HourlyForecast {
   dt: number;
   temp: number;
   weather: Weather[];
-}
-
-export interface WeatherForecastData {
-  hourly: HourlyForecast[];
 }
 
 export interface WeatherCardProps {
@@ -51,5 +58,5 @@ export interface CardData {
   name: string;
   lat?: number;
   lon?: number;
-  city?: string; // Для пользовательских городов без координат
+  city?: string;
 }

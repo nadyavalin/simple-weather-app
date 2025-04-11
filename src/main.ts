@@ -3,7 +3,7 @@ import { getPointWeather, getWeather, getWeatherForecast } from "./api";
 import "./style.css";
 import "./components/WeatherCard.css";
 import { createWeatherCard } from "./components/weatherCard";
-import { CardData } from "./types/interfaces";
+import { CardData, HourlyForecast } from "./types/interfaces";
 import { loadCardsFromStorage, saveCardsToStorage } from "./utils/utils";
 import { defaultLocations } from "./constants";
 
@@ -42,6 +42,12 @@ async function displayCards(cards: CardData[]) {
         throw new Error("Неверные данные карточки");
       }
 
+      const hourlyForecast: HourlyForecast[] = forecastData.list.map((item) => ({
+        dt: item.dt,
+        temp: item.main.temp,
+        weather: item.weather,
+      }));
+
       const card = createWeatherCard({
         city: cardData.name,
         temp: currentData.main.temp,
@@ -52,7 +58,7 @@ async function displayCards(cards: CardData[]) {
         wind_deg: currentData.wind.deg,
         description: currentData.weather[0].description,
         icon: currentData.weather[0].icon,
-        forecast: forecastData.hourly,
+        forecast: hourlyForecast,
         onRemove: () => removeCard(cardData),
       });
       weatherOutput.appendChild(card);
@@ -82,7 +88,22 @@ async function addNewCityWeather() {
       lon: currentData.coord.lon,
     };
     const cards = loadCardsFromStorage();
-    cards.push(newCard);
+
+    const cityExists = cards.some(
+      (card) => card.name.trim().toLowerCase() === newCard.name.trim().toLowerCase(),
+    );
+    if (cityExists) {
+      const errorMessage = document.createElement("p");
+      errorMessage.textContent = `Город ${newCard.name} уже есть в списке!`;
+      errorMessage.className = "error";
+      weatherOutput.appendChild(errorMessage);
+      setTimeout(() => errorMessage.remove(), 3000);
+      cityInput.value = "";
+      cityInput.focus();
+      return;
+    }
+
+    cards.unshift(newCard);
     saveCardsToStorage(cards);
     displayCards(cards);
     cityInput.value = "";
