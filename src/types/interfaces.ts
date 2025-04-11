@@ -60,3 +60,8 @@ export interface CardData {
   lon?: number;
   city?: string;
 }
+
+export enum SnackbarType {
+  error = "error",
+  success = "success",
+}

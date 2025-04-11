@@ -3,9 +3,15 @@ import { getPointWeather, getWeather, getWeatherForecast } from "./api";
 import "./style.css";
 import "./components/WeatherCard.css";
 import { createWeatherCard } from "./components/weatherCard";
-import { CardData, HourlyForecast } from "./types/interfaces";
+import { CardData, HourlyForecast, SnackbarType } from "./types/interfaces";
 import { loadCardsFromStorage, saveCardsToStorage } from "./utils/utils";
 import { defaultLocations } from "./constants";
+import { createElement, createSnackbar } from "./utils/elements";
+
+export const snackbarContainer = createElement({
+  tagName: "div",
+  classNames: ["snackbar-container"],
+});
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
@@ -63,9 +69,11 @@ async function displayCards(cards: CardData[]) {
       });
       weatherOutput.appendChild(card);
     } catch (error) {
-      const errorMessage = document.createElement("p");
-      errorMessage.textContent = `Ошибка для ${cardData.name}: ${(error as Error).message}`;
-      errorMessage.className = "error";
+      const errorMessage = createElement({
+        tagName: "p",
+        classNames: ["error"],
+        textContent: `Невозможно загрузить ${cardData.name}: ${(error as Error).message}`,
+      });
       weatherOutput.appendChild(errorMessage);
     }
   }
@@ -93,11 +101,7 @@ async function addNewCityWeather() {
       (card) => card.name.trim().toLowerCase() === newCard.name.trim().toLowerCase(),
     );
     if (cityExists) {
-      const errorMessage = document.createElement("p");
-      errorMessage.textContent = `Город ${newCard.name} уже есть в списке!`;
-      errorMessage.className = "error";
-      weatherOutput.appendChild(errorMessage);
-      setTimeout(() => errorMessage.remove(), 3000);
+      createSnackbar(SnackbarType.error, `Город ${newCard.name} уже есть в списке!`);
       cityInput.value = "";
       cityInput.focus();
       return;
@@ -108,21 +112,16 @@ async function addNewCityWeather() {
     displayCards(cards);
     cityInput.value = "";
   } catch (error) {
-    const errorMessage = document.createElement("p");
-    errorMessage.textContent = `Ошибка: ${(error as Error).message}`;
-    errorMessage.className = "error";
-    weatherOutput.appendChild(errorMessage);
-    setTimeout(() => errorMessage.remove(), 3000);
+    createSnackbar(SnackbarType.error, `Ошибка: ${(error as Error).message}`);
   }
 }
 
 if (app) {
-  const inputContainer = document.createElement("div");
-  inputContainer.className = "input-container";
-
-  const input = document.createElement("input");
-  input.id = "cityInput";
-  input.placeholder = "Введи город";
+  const inputContainer = createElement({ tagName: "div", classNames: ["input-container"] });
+  const input = createElement({
+    tagName: "input",
+    attributes: { id: "cityInput", placeholder: "Введи город" },
+  });
 
   input.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
@@ -130,13 +129,14 @@ if (app) {
     }
   });
 
-  const addButton = document.createElement("button");
-  addButton.textContent = "Добавить город";
+  const addButton = createElement({ tagName: "button", textContent: "Добавить город" });
   addButton.addEventListener("click", addNewCityWeather);
 
-  const resetButton = document.createElement("button");
-  resetButton.textContent = "Восстановить дефолт";
-  resetButton.className = "reset-btn";
+  const resetButton = createElement({
+    tagName: "button",
+    classNames: ["reset-btn"],
+    textContent: "Восстановить дефолт",
+  });
   resetButton.addEventListener("click", () => {
     saveCardsToStorage(defaultLocations);
     displayCards(defaultLocations);
@@ -144,10 +144,9 @@ if (app) {
 
   inputContainer.append(input, addButton, resetButton);
 
-  const weatherOutput = document.createElement("div");
-  weatherOutput.id = "weatherOutput";
+  const weatherOutput = createElement({ tagName: "div", attributes: { id: "weatherOutput" } });
 
-  app.append(inputContainer, weatherOutput);
+  app.append(snackbarContainer, inputContainer, weatherOutput);
 
   const savedCards = loadCardsFromStorage();
   displayCards(savedCards);

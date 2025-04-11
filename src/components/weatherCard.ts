@@ -1,5 +1,6 @@
 import { iconMap, PRESSURE_COEFFICIENT } from "../constants";
 import { WeatherCardProps } from "../types/interfaces";
+import { createElement } from "../utils/elements";
 import { getWindDirection } from "../utils/utils";
 
 export function createWeatherCard({
@@ -15,74 +16,78 @@ export function createWeatherCard({
   forecast = [],
   onRemove,
 }: WeatherCardProps & { onRemove?: () => void }): HTMLElement {
-  const card = document.createElement("div");
-  card.className = "weather-card";
-
-  const cardHeader = document.createElement("div");
-  cardHeader.className = "weather-card__header";
-  const cardContent = document.createElement("div");
-  cardContent.className = "weather-card__content";
-
-  const cityName = document.createElement("h2");
-  cityName.textContent = city;
-
-  const iconImg = document.createElement("img");
-  iconImg.src = iconMap[icon];
-  iconImg.alt = description;
-  iconImg.className = "weather-icon";
-
-  const weatherDesc = document.createElement("p");
-  weatherDesc.className = "description";
-  weatherDesc.textContent = description;
-
-  const temperature = document.createElement("p");
-  temperature.className = "temperature";
-  temperature.textContent = `${temp}°C `;
-
-  const feels = document.createElement("span");
-  feels.className = "fills-like";
-  feels.textContent = `(${feels_like}°C)`;
+  const card = createElement({ tagName: "div", classNames: ["weather-card"] });
+  const cardHeader = createElement({ tagName: "div", classNames: ["weather-card__header"] });
+  const cardContent = createElement({ tagName: "div", classNames: ["weather-card__content"] });
+  const cityName = createElement({ tagName: "h2", textContent: city });
+  const iconImg = createElement({
+    tagName: "img",
+    classNames: ["weather-icon"],
+    attributes: { src: iconMap[icon], alt: description },
+  });
+  const weatherDesc = createElement({
+    tagName: "p",
+    classNames: ["description"],
+    textContent: description,
+  });
+  const temperature = createElement({
+    tagName: "p",
+    classNames: ["temperature"],
+    textContent: `${temp}°C `,
+  });
+  const feels = createElement({
+    tagName: "span",
+    classNames: ["fills-like"],
+    textContent: `(${feels_like}°C)`,
+  });
   temperature.appendChild(feels);
 
-  const humid = document.createElement("p");
-  humid.className = "humidity";
-  humid.textContent = `${humidity}%`;
+  const humid = createElement({
+    tagName: "p",
+    classNames: ["humidity"],
+    textContent: `${humidity}%`,
+  });
+  const press = createElement({
+    tagName: "p",
+    classNames: ["pressure"],
+    textContent: `${Math.round(pressure * PRESSURE_COEFFICIENT)} мм.рт.ст`,
+  });
+  const windSpeed = createElement({
+    tagName: "p",
+    classNames: ["wind-speed"],
+    textContent: `${wind_speed} м/с `,
+  });
+  const windDirection = createElement({
+    tagName: "span",
+    classNames: ["wind-direction"],
+    textContent: getWindDirection(wind_deg),
+  });
+  windSpeed.appendChild(windDirection);
 
-  const press = document.createElement("p");
-  press.className = "pressure";
-  press.textContent = `${Math.round(pressure * PRESSURE_COEFFICIENT)} мм.рт.ст`;
-
-  const windSpeed = document.createElement("p");
-  windSpeed.className = "wind-speed";
-  windSpeed.textContent = `${wind_speed} м/с `;
-
-  const span = document.createElement("span");
-  span.className = "wind-direction";
-  span.textContent = getWindDirection(wind_deg);
-  windSpeed.appendChild(span);
-
-  const forecastContainer = document.createElement("div");
-  forecastContainer.className = "forecast";
+  const forecastContainer = createElement({ tagName: "div", classNames: ["forecast"] });
   if (forecast.length > 0) {
-    const forecastTitle = document.createElement("h4");
-    forecastTitle.textContent = "Через 3 часа:";
+    const forecastTitle = createElement({ tagName: "h4", textContent: "Через 3 часа:" });
     forecastContainer.appendChild(forecastTitle);
 
     const nextHour = forecast[1];
     if (nextHour) {
-      const hourElement = document.createElement("p");
       const time = new Date(nextHour.dt * 1000).toLocaleTimeString("ru", {
         hour: "2-digit",
         minute: "2-digit",
       });
-      hourElement.textContent = `${time}: ${nextHour.temp}°C, ${nextHour.weather[0].description}`;
+      const hourElement = createElement({
+        tagName: "p",
+        textContent: `${time}: ${nextHour.temp}°C, ${nextHour.weather[0].description}`,
+      });
       forecastContainer.appendChild(hourElement);
     }
   }
 
-  const removeButton = document.createElement("button");
-  removeButton.textContent = "Удалить";
-  removeButton.className = "remove-btn";
+  const removeButton = createElement({
+    tagName: "button",
+    classNames: ["remove-btn"],
+    textContent: "Удалить",
+  });
   removeButton.addEventListener("click", () => {
     card.remove();
     if (onRemove) onRemove();
