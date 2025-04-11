@@ -50,6 +50,16 @@ function buildWeatherCard(
   });
 }
 
+function showNoDataMessage(container: HTMLElement) {
+  const noDataMessage = createElement({
+    tagName: "p",
+    classNames: ["no-data"],
+    textContent: "Нет данных для отображения",
+  });
+  container.innerHTML = "";
+  container.appendChild(noDataMessage);
+}
+
 function removeCard(cardToRemove: CardData) {
   const cards = loadCardsFromStorage();
   const updatedCards = cards.filter(
@@ -68,6 +78,9 @@ function removeCard(cardToRemove: CardData) {
     ) as HTMLElement | null;
     if (cardElement) {
       cardElement.remove();
+      if (!weatherOutput.querySelector(".weather-card")) {
+        showNoDataMessage(weatherOutput);
+      }
     } else {
     }
   } else {

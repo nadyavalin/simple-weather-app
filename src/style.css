@@ -105,6 +105,11 @@ button {
   color: var(--attention-color);
 }
 
+.no-data {
+  font-size: 1.5em;
+  color: var(--card-description-color);
+}
+
 .snackbar-container {
   position: fixed;
   z-index: var(--notifications-layer);
