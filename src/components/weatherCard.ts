@@ -89,12 +89,16 @@ export function createWeatherCard({
     textContent: "Удалить",
   });
   removeButton.addEventListener("click", () => {
-    card.remove();
-    if (onRemove) onRemove();
+    if (onRemove) {
+      onRemove();
+    } else {
+      console.warn("onRemove не определён");
+    }
   });
 
   card.append(cardHeader, cardContent);
   cardHeader.append(cityName, iconImg, weatherDesc);
   cardContent.append(temperature, humid, press, windSpeed, forecastContainer, removeButton);
+  card.setAttribute("data-city", city);
   return card;
 }

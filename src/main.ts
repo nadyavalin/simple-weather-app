@@ -3,7 +3,13 @@ import { getPointWeather, getWeather, getWeatherForecast } from "./api";
 import "./style.css";
 import "./components/WeatherCard.css";
 import { createWeatherCard } from "./components/weatherCard";
-import { CardData, HourlyForecast, SnackbarType } from "./types/interfaces";
+import {
+  CardData,
+  HourlyForecast,
+  SnackbarType,
+  WeatherData,
+  WeatherForecastData,
+} from "./types/interfaces";
 import { loadCardsFromStorage, saveCardsToStorage } from "./utils/utils";
 import { defaultLocations } from "./constants";
 import { createElement, createSnackbar } from "./utils/elements";
@@ -15,6 +21,35 @@ export const snackbarContainer = createElement({
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
+function getHourlyForecast(forecastData: WeatherForecastData): HourlyForecast[] {
+  return forecastData.list.map((item) => ({
+    dt: item.dt,
+    temp: item.main.temp,
+    weather: item.weather,
+  }));
+}
+
+function buildWeatherCard(
+  cardData: CardData,
+  currentData: WeatherData,
+  forecastData: WeatherForecastData,
+): HTMLElement {
+  const hourlyForecast = getHourlyForecast(forecastData);
+  return createWeatherCard({
+    city: cardData.name,
+    temp: currentData.main.temp,
+    feels_like: currentData.main.feels_like,
+    humidity: currentData.main.humidity,
+    pressure: currentData.main.pressure,
+    wind_speed: currentData.wind.speed,
+    wind_deg: currentData.wind.deg,
+    description: currentData.weather[0].description,
+    icon: currentData.weather[0].icon,
+    forecast: hourlyForecast,
+    onRemove: () => removeCard(cardData),
+  });
+}
+
 function removeCard(cardToRemove: CardData) {
   const cards = loadCardsFromStorage();
   const updatedCards = cards.filter(
@@ -25,7 +60,19 @@ function removeCard(cardToRemove: CardData) {
       card.city !== cardToRemove.city,
   );
   saveCardsToStorage(updatedCards);
-  displayCards(updatedCards);
+
+  const weatherOutput = document.getElementById("weatherOutput");
+  if (weatherOutput) {
+    const cardElement = weatherOutput.querySelector(
+      `[data-city="${cardToRemove.name}"]`,
+    ) as HTMLElement | null;
+    if (cardElement) {
+      cardElement.remove();
+    } else {
+    }
+  } else {
+    console.error("weatherOutput не найден");
+  }
 }
 
 async function displayCards(cards: CardData[]) {
@@ -48,25 +95,7 @@ async function displayCards(cards: CardData[]) {
         throw new Error("Неверные данные карточки");
       }
 
-      const hourlyForecast: HourlyForecast[] = forecastData.list.map((item) => ({
-        dt: item.dt,
-        temp: item.main.temp,
-        weather: item.weather,
-      }));
-
-      const card = createWeatherCard({
-        city: cardData.name,
-        temp: currentData.main.temp,
-        feels_like: currentData.main.feels_like,
-        humidity: currentData.main.humidity,
-        pressure: currentData.main.pressure,
-        wind_speed: currentData.wind.speed,
-        wind_deg: currentData.wind.deg,
-        description: currentData.weather[0].description,
-        icon: currentData.weather[0].icon,
-        forecast: hourlyForecast,
-        onRemove: () => removeCard(cardData),
-      });
+      const card = buildWeatherCard(cardData, currentData, forecastData);
       weatherOutput.appendChild(card);
     } catch (error) {
       const errorMessage = createElement({
@@ -90,6 +119,7 @@ async function addNewCityWeather() {
 
   try {
     const currentData = await getWeather(city);
+    const forecastData = await getWeatherForecast(currentData.coord.lat, currentData.coord.lon);
     const newCard: CardData = {
       name: currentData.name,
       lat: currentData.coord.lat,
@@ -107,9 +137,12 @@ async function addNewCityWeather() {
       return;
     }
 
+    const card = buildWeatherCard(newCard, currentData, forecastData);
+    weatherOutput.insertBefore(card, weatherOutput.firstChild);
+
     cards.unshift(newCard);
     saveCardsToStorage(cards);
-    displayCards(cards);
+
     cityInput.value = "";
   } catch (error) {
     createSnackbar(SnackbarType.error, `Ошибка: ${(error as Error).message}`);
