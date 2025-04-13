@@ -168,11 +168,15 @@ if (app) {
     tagName: "input",
     attributes: { id: "cityInput", placeholder: "Введи город" },
   });
-
   input.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       addNewCityWeather();
     }
+  });
+
+  const cross = createElement({ tagName: "span", classNames: ["cross"] });
+  cross.addEventListener("click", () => {
+    input.value = "";
   });
 
   const addButton = createElement({ tagName: "button", textContent: "Добавить город" });

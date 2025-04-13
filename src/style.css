@@ -72,6 +72,17 @@ input {
   font-size: 1em;
 }
 
+.cross {
+  position: relative;
+  display: inline;
+}
+
+.cross .close {
+  position: absolute;
+  right: 0;
+  padding: 0 5px;
+}
+
 button {
   cursor: pointer;
 
@@ -154,7 +165,7 @@ button {
   }
 }
 
-@media (max-width: 380px) {
+@media (max-width: 650px) {
   .input-container {
     flex-direction: column;
     gap: 10px;
