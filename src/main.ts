@@ -13,6 +13,7 @@ import { defaultLocations } from "./constants";
 import { createElement, createSnackbar } from "./utils/elements";
 import { createWeatherCard } from "./components/weatherCard/weatherCard";
 import handleAsyncButtonAction from "./handlers/handleAsyncButtonAction";
+import showNoDataMessage from "./components/noDataMessage";
 
 export const snackbarContainer = createElement({
   tagName: "div",
@@ -48,16 +49,6 @@ function buildWeatherCard(
     forecast: hourlyForecast,
     onRemove: () => removeCard(cardData),
   });
-}
-
-function showNoDataMessage(container: HTMLElement) {
-  const noDataMessage = createElement({
-    tagName: "p",
-    classNames: ["no-data"],
-    textContent: "Нет данных для отображения",
-  });
-  container.innerHTML = "";
-  container.appendChild(noDataMessage);
 }
 
 function removeCard(cardToRemove: CardData) {
@@ -170,9 +161,31 @@ async function addNewCityWeather() {
     cityInput.value = "";
   } catch (error) {
     createSnackbar(SnackbarType.error, `Ошибка: ${(error as Error).message}`);
-    throw error;
   }
 }
+
+// function initYandexSuggest() {
+//   const cityInput = document.getElementById("cityInput") as HTMLInputElement;
+//   if (!cityInput) {
+//     console.error("cityInput не найден");
+//     return;
+//   }
+
+//   if (typeof ymaps === "undefined") {
+//     console.error("Яндекс.Карты не загружены");
+//     return;
+//   }
+
+//   ymaps.ready(() => {
+//     console.log("ymaps.ready вызван");
+//     const suggestView = new ymaps.SuggestView("cityInput");
+//     suggestView.events.add("select", (e: any) => {
+//       const selected = e.get("item").value;
+//       console.log("Выбран город:", selected);
+//       cityInput.value = selected;
+//     });
+//   });
+// }
 
 if (app) {
   const inputContainer = createElement({ tagName: "div", classNames: ["input-container"] });
@@ -180,25 +193,29 @@ if (app) {
     tagName: "input",
     attributes: { id: "cityInput", placeholder: "Введи город" },
   });
+
   input.addEventListener("keydown", async (event) => {
     if (event.key === "Enter") {
       const addButton = inputContainer.querySelector("button:not(.reset-btn)") as HTMLButtonElement;
-      addButton.disabled = true;
-      addButton.innerHTML = '<div class="spinner"></div>';
-      try {
-        await addNewCityWeather();
-      } catch (error) {
-        console.error("Ошибка при добавлении города:", error);
-      } finally {
-        addButton.disabled = false;
-        addButton.textContent = "Добавить город";
-      }
+      await handleAsyncButtonAction(
+        addButton,
+        addNewCityWeather,
+        "Добавить город",
+        "Ошибка при добавлении города",
+      );
     }
   });
 
   const cross = createElement({ tagName: "span", classNames: ["cross"] });
-  cross.addEventListener("click", () => {
-    input.value = "";
+  cross.addEventListener("click", (e) => {
+    e.stopPropagation();
+    console.log("Крестик кликнут, input:", input);
+    if (input instanceof HTMLInputElement) {
+      input.value = "";
+      cross.style.display = "none";
+    } else {
+      console.error("input не является HTMLInputElement");
+    }
   });
 
   const addButton = createElement({ tagName: "button", textContent: "Добавить город" });
@@ -234,6 +251,8 @@ if (app) {
   const weatherOutput = createElement({ tagName: "div", attributes: { id: "weatherOutput" } });
 
   app.append(snackbarContainer, inputContainer, weatherOutput);
+
+  // initYandexSuggest();
 
   const savedCards = loadCardsFromStorage();
   displayCards(savedCards);

@@ -18,7 +18,10 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    /* Yandex Maps */
+    "typeRoots": ["./node_modules/@types", "./types"]
   },
   "include": ["src", "src/api.ts"]
 }
