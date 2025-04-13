@@ -1,7 +1,7 @@
-import { iconMap, PRESSURE_COEFFICIENT } from "../constants";
-import { WeatherCardProps } from "../types/interfaces";
-import { createElement } from "../utils/elements";
-import { getWindDirection } from "../utils/utils";
+import { iconMap, PRESSURE_COEFFICIENT } from "../../constants";
+import { WeatherCardProps } from "../../types/interfaces";
+import { createElement } from "../../utils/elements";
+import { getWindDirection } from "../../utils/utils";
 
 export function createWeatherCard({
   city,

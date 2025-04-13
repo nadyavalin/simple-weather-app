@@ -25,6 +25,8 @@
   --attention-color: #d9534f;
   --success-color: #28a745;
   --notifications-layer: 1;
+  --spin-border-color: #f3f3f3;
+  --spin-border-top-color: #ffffff;
 }
 
 body {
@@ -41,7 +43,7 @@ body {
 
 #app {
   width: 90%;
-  min-height: 650px;
+  min-height: 700px;
   margin: 30px 0;
   padding: 30px;
   border-radius: 12px;
@@ -86,6 +88,7 @@ input {
 button {
   cursor: pointer;
 
+  width: 180px;
   padding: 12px 20px;
   border: none;
   border-radius: 6px;
@@ -96,6 +99,17 @@ button {
   background-color: var(--button-color);
 
   transition: background-color 0.3s ease-in;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  margin: 0 auto;
+  border: 2px solid var(--spin-border-color);
+  border-top: 1px solid var(--spin-border-top-color);
+  border-radius: 50%;
+
+  animation: spin 1s linear infinite;
 }
 
 .reset-btn {
@@ -183,6 +197,16 @@ button {
     opacity: 1;
   }
   100% {
-    opacity: 0; /* Исчезает к концу (4s) */
+    opacity: 0;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
   }
 }

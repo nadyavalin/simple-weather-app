@@ -1,8 +1,6 @@
 import { getPointWeather, getWeather, getWeatherForecast } from "./api";
-
 import "./style.css";
-import "./components/WeatherCard.css";
-import { createWeatherCard } from "./components/weatherCard";
+import "./components/weatherCard/WeatherCard.css";
 import {
   CardData,
   HourlyForecast,
@@ -13,6 +11,8 @@ import {
 import { loadCardsFromStorage, saveCardsToStorage } from "./utils/utils";
 import { defaultLocations } from "./constants";
 import { createElement, createSnackbar } from "./utils/elements";
+import { createWeatherCard } from "./components/weatherCard/weatherCard";
+import handleAsyncButtonAction from "./handlers/handleAsyncButtonAction";
 
 export const snackbarContainer = createElement({
   tagName: "div",
@@ -77,24 +77,30 @@ function removeCard(cardToRemove: CardData) {
       `[data-city="${cardToRemove.name}"]`,
     ) as HTMLElement | null;
     if (cardElement) {
+      cardElement.style.opacity = "0";
+
       cardElement.remove();
       if (!weatherOutput.querySelector(".weather-card")) {
         showNoDataMessage(weatherOutput);
       }
-    } else {
     }
-  } else {
-    console.error("weatherOutput не найден");
   }
 }
 
-async function displayCards(cards: CardData[]) {
+async function displayCards(cards: CardData[]): Promise<void> {
   const weatherOutput = document.getElementById("weatherOutput");
-  if (!weatherOutput) return;
+  if (!weatherOutput) {
+    return;
+  }
 
   weatherOutput.innerHTML = "";
 
-  for (const cardData of cards) {
+  if (cards.length === 0) {
+    showNoDataMessage(weatherOutput);
+    return;
+  }
+
+  const promises = cards.map(async (cardData) => {
     try {
       let currentData;
       let forecastData;
@@ -118,7 +124,9 @@ async function displayCards(cards: CardData[]) {
       });
       weatherOutput.appendChild(errorMessage);
     }
-  }
+  });
+
+  await Promise.all(promises);
 }
 
 async function addNewCityWeather() {
@@ -151,6 +159,9 @@ async function addNewCityWeather() {
     }
 
     const card = buildWeatherCard(newCard, currentData, forecastData);
+    if (!weatherOutput.querySelector(".weather-card")) {
+      weatherOutput.innerHTML = "";
+    }
     weatherOutput.insertBefore(card, weatherOutput.firstChild);
 
     cards.unshift(newCard);
@@ -159,6 +170,7 @@ async function addNewCityWeather() {
     cityInput.value = "";
   } catch (error) {
     createSnackbar(SnackbarType.error, `Ошибка: ${(error as Error).message}`);
+    throw error;
   }
 }
 
@@ -168,9 +180,19 @@ if (app) {
     tagName: "input",
     attributes: { id: "cityInput", placeholder: "Введи город" },
   });
-  input.addEventListener("keydown", (event) => {
+  input.addEventListener("keydown", async (event) => {
     if (event.key === "Enter") {
-      addNewCityWeather();
+      const addButton = inputContainer.querySelector("button:not(.reset-btn)") as HTMLButtonElement;
+      addButton.disabled = true;
+      addButton.innerHTML = '<div class="spinner"></div>';
+      try {
+        await addNewCityWeather();
+      } catch (error) {
+        console.error("Ошибка при добавлении города:", error);
+      } finally {
+        addButton.disabled = false;
+        addButton.textContent = "Добавить город";
+      }
     }
   });
 
@@ -180,19 +202,34 @@ if (app) {
   });
 
   const addButton = createElement({ tagName: "button", textContent: "Добавить город" });
-  addButton.addEventListener("click", addNewCityWeather);
+  addButton.addEventListener("click", async () => {
+    await handleAsyncButtonAction(
+      addButton,
+      addNewCityWeather,
+      "Добавить город",
+      "Ошибка при добавлении города",
+    );
+  });
 
   const resetButton = createElement({
     tagName: "button",
     classNames: ["reset-btn"],
-    textContent: "Восстановить дефолт",
+    textContent: "Восстановить",
+    attributes: { title: "Восстановить исходные карточки" },
   });
-  resetButton.addEventListener("click", () => {
-    saveCardsToStorage(defaultLocations);
-    displayCards(defaultLocations);
+  resetButton.addEventListener("click", async () => {
+    await handleAsyncButtonAction(
+      resetButton,
+      async () => {
+        saveCardsToStorage(defaultLocations);
+        await displayCards(defaultLocations);
+      },
+      "Восстановить",
+      "Ошибка при восстановлении дефолтных городов",
+    );
   });
 
-  inputContainer.append(input, addButton, resetButton);
+  inputContainer.append(input, cross, addButton, resetButton);
 
   const weatherOutput = createElement({ tagName: "div", attributes: { id: "weatherOutput" } });
 
