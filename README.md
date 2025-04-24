@@ -2,6 +2,26 @@
 
 ## Deploy: [simple-weather-app.netlify](https://nadyavalin-simple-weather-app.netlify.app/)
 
+## Technology stack:
+![TypeScript](https://img.shields.io/badge/TypeScript-%233178C6.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
+![Prettier](https://img.shields.io/badge/Prettier-%23F7B93E.svg?style=for-the-badge&logo=prettier&logoColor=black)
+![Stylelint](https://img.shields.io/badge/Stylelint-%23263D42.svg?style=for-the-badge&logo=stylelint&logoColor=white)
+
+### How to run project locally:
+1. run `git clone https://github.com/nadyavalin/simple-weather-app.git`
+2. go to `simple-weather-app` folder
+3. run `npm install` for installing necessary node modules
+4. run `npm run dev` for running project with Vite in develop mode
+
+#### Available scripts:
+- `npm run dev` run project with Vite in develop mode
+- `npm run build` builds project with Vite in production mode
+- `npm run format` formats all files with Prettier
+- `npm run ci:format` checks if files are formatted
+- `stylelint` checks if css files are formatted
+- `stylelint:fix` fix all css files with Stylelint
+
 # Icons were taken from Meteocons
 
 Free to use animated SVG weather icons. Handcrafted by [Bas Milius](https://bas.dev).

@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "format": "npx prettier . --write",
+    "ci:format": "prettier --check .",
     "stylelint": "npx stylelint **/*.css",
     "stylelint:fix": "stylelint **/*.css --fix",
     "build": "tsc && vite build",
