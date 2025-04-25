@@ -9,7 +9,10 @@
 ![Stylelint](https://img.shields.io/badge/Stylelint-%23263D42.svg?style=for-the-badge&logo=stylelint&logoColor=white)
 
 ### API documentation:
-[openweathermap.org/api/one-call-3](https://openweathermap.org/api/one-call-3) - don't forget to create your own API key
+[openweathermap.org/api/one-call-3](https://openweathermap.org/api/one-call-3)
+
+### API Keys:
+[home.openweathermap.org/api_keys](https://home.openweathermap.org/api_keys) - authorize and create your own API key
 
 ### How to run project locally:
 1. run `git clone https://github.com/nadyavalin/simple-weather-app.git`
