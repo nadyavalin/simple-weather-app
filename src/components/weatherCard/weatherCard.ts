@@ -1,4 +1,4 @@
-import { iconMap, PRESSURE_COEFFICIENT } from "../../constants";
+import { iconMap, PRESSURE_COEFFICIENT } from "../../utils/constants";
 import { WeatherCardProps } from "../../types/interfaces";
 import { createElement } from "../../utils/elements";
 import { getWindDirection } from "../../utils/utils";

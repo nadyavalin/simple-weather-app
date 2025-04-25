@@ -23,5 +23,5 @@
     /* Yandex Maps */
     "typeRoots": ["./node_modules/@types", "./types"]
   },
-  "include": ["src", "src/api.ts"]
+  "include": ["src", "src/api/api.ts"]
 }

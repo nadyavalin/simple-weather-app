@@ -1,4 +1,4 @@
-import { getPointWeather, getWeather, getWeatherForecast } from "./api";
+import { getPointWeather, getWeather, getWeatherForecast } from "./api/api";
 import "./style.css";
 import "./components/weatherCard/WeatherCard.css";
 import {
@@ -9,7 +9,7 @@ import {
   WeatherForecastData,
 } from "./types/interfaces";
 import { loadCardsFromStorage, saveCardsToStorage } from "./utils/utils";
-import { defaultLocations } from "./constants";
+import { defaultLocations } from "./utils/constants";
 import { createElement, createSnackbar } from "./utils/elements";
 import { createWeatherCard } from "./components/weatherCard/weatherCard";
 import handleAsyncButtonAction from "./handlers/handleAsyncButtonAction";

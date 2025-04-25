@@ -8,11 +8,15 @@
 ![Prettier](https://img.shields.io/badge/Prettier-%23F7B93E.svg?style=for-the-badge&logo=prettier&logoColor=black)
 ![Stylelint](https://img.shields.io/badge/Stylelint-%23263D42.svg?style=for-the-badge&logo=stylelint&logoColor=white)
 
+### API documentation:
+[openweathermap.org/api/one-call-3](https://openweathermap.org/api/one-call-3) - don't forget to create your own API key
+
 ### How to run project locally:
 1. run `git clone https://github.com/nadyavalin/simple-weather-app.git`
 2. go to `simple-weather-app` folder
 3. run `npm install` for installing necessary node modules
-4. run `npm run dev` for running project with Vite in develop mode
+4. create `.env` file into the root of the project, where create the variable `VITE_API_KEY="YOUR_API_KEY"` and add your APY key
+5. run `npm run dev` for running project with Vite in develop mode
 
 #### Available scripts:
 - `npm run dev` run project with Vite in develop mode

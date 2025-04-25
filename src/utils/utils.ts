@@ -1,4 +1,4 @@
-import { defaultLocations } from "../constants";
+import { defaultLocations } from "./constants";
 import { CardData } from "../types/interfaces";
 
 export function getWindDirection(deg: number): string {
