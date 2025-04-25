@@ -15,7 +15,7 @@
 1. run `git clone https://github.com/nadyavalin/simple-weather-app.git`
 2. go to `simple-weather-app` folder
 3. run `npm install` for installing necessary node modules
-4. create `.env` file into the root of the project, where create the variable `VITE_API_KEY="YOUR_API_KEY"` and add your APY key
+4. create an `.env` file in the root of the project, where create the variable `VITE_API_KEY="YOUR_API_KEY"` and add your APY key
 5. run `npm run dev` for running project with Vite in develop mode
 
 #### Available scripts:
